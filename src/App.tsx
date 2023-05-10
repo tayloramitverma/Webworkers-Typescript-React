@@ -30,6 +30,11 @@ const App = () => {
     []
   );
 
+  const getUser: Worker = React.useMemo(
+    () => new Worker(new URL("./longProcesses/GetUser.ts", import.meta.url)),
+    []
+  );
+
   const handlePageNumber = (userSelectedPage: number) => {
     if (window.Worker) {
       const request = {
@@ -92,19 +97,6 @@ const App = () => {
 
   React.useEffect(() => {
     if (window.Worker) {
-      const request = {
-        action: processList.getData,
-        period: "initial",
-        thePageNumber: profileList.page,
-      } as GetDataType;
-
-      getData.postMessage(JSON.stringify(request));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    if (window.Worker) {
       getData.onmessage = (e: MessageEvent<string>) => {
         const response = JSON.parse(e.data) as unknown as ProfileListType;
         console.log({ response });
@@ -118,6 +110,31 @@ const App = () => {
       };
     }
   }, [getData]);
+
+  React.useEffect(() => {
+    if (window.Worker) {
+      const request = {
+        action: processList.getData,
+        period: "initial",
+        thePageNumber: profileList.page,
+      } as GetDataType;
+
+      getData.postMessage(JSON.stringify(request));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    console.log("run");
+    if (window.Worker) {
+      getUser.postMessage(processList.getUser);
+
+      // getUser.onmessage = (e: MessageEvent<string>) => {
+      //   console.log("first", e.data);
+      // };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="main-container">

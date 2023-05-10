@@ -1,6 +1,7 @@
 export enum processList {
   count = "count",
   getData = "getData",
+  getUser = "getUser",
 }
 
 export enum ProfileEnum {

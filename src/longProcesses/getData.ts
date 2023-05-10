@@ -8,7 +8,7 @@ import {
 } from "../consts";
 
 self.onmessage = (e: MessageEvent<string>) => {
-  const data = JSON.parse(e.data) as GetDataType;
+  const data: GetDataType = JSON.parse(e.data);
 
   if (data.action !== processList.getData) {
     return;
